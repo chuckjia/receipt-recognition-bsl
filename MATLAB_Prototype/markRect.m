@@ -1,8 +1,10 @@
-function markRect(xLeft, yTop, width, height)
+function markRect(xLeft, yTop, width, height, markerColor)
 %MARKRECT Summary of this function goes here
 %   Detailed explanation goes here
 
-markerColor = 'Red';
+if nargin < 5
+    markerColor = 'Red';
+end
 markerSize = 20;
 plot(xLeft, yTop, 'x', 'Color', markerColor, 'MarkerSize', markerSize)
 plot(xLeft + width, yTop, 'x', 'Color', markerColor, 'MarkerSize', markerSize)

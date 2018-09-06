@@ -1,8 +1,9 @@
 function [miny, maxy, k] = houghTransform(I, plotLines)
-%HOUGHTRANSFORM Summary of this function goes here
-%   Detailed explanation goes here
+%HOUGHTRANSFORM Perform Hough transform on the image to detect lines
+%   Input::  I: image matrix
+%            plotLines: Bool-type variable indicating whether to generate plots for the detected lines
 
-[nrow, ncol] = size(I);
+[~, ncol] = size(I);
 
 [H, T, R] = hough(I, 'RhoResolution', 10, 'Theta', cat(2, -90:0.1:-85, 85:0.1:89.99));
 P = houghpeaks(H, 10);
@@ -14,54 +15,52 @@ if plotLines
     figure
     imshow(I)
     hold on
+    
+    %     % Draw hough lines on the original image
+    %     for k = 1:length(lines)
+    %         xy = [lines(k).point1; lines(k).point2];
+    %         plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color', 'green');
+    %
+    %         % Plot beginnings and ends of lines
+    %         plot(xy(1,1), xy(1,2), 'x', 'LineWidth', 4, 'Color', 'yellow');
+    %         plot(xy(2,1), xy(2,2), 'x', 'LineWidth', 4, 'Color', 'red');
+    %     end
 end
-
-% Draw hough lines on the original image
-% if plotLines
-%     for k = 1:length(lines)
-%         xy = [lines(k).point1; lines(k).point2];
-%         plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color', 'green');
-% 
-%         % Plot beginnings and ends of lines
-%         plot(xy(1,1), xy(1,2), 'x', 'LineWidth', 4, 'Color', 'yellow');
-%         plot(xy(2,1), xy(2,2), 'x', 'LineWidth', 4, 'Color', 'red');
-%     end
-% end
 
 % Find horizontal location for "WMS Order No."
 numLines = length(lines);
-lines_startx = zeros(numLines, 1);  lines_starty = zeros(numLines, 1);
-lines_endx = zeros(numLines, 1);  lines_endy = zeros(numLines, 1);
+linesStartX = zeros(numLines, 1);  linesStartY = zeros(numLines, 1);
+linesEndX = zeros(numLines, 1);  linesEndY = zeros(numLines, 1);
 for k = 1:length(lines)
-    pt1 = lines(k).point1;
-    pt2 = lines(k).point2;
+    startPt = lines(k).point1;
+    endPt = lines(k).point2;
     
-    lines_startx(k) = pt1(1);
-    lines_starty(k) = pt1(2);
-    lines_endx(k) = pt2(1);
-    lines_endy(k) = pt2(2);
+    linesStartX(k) = startPt(1);
+    linesStartY(k) = startPt(2);
+    linesEndX(k) = endPt(1);
+    linesEndY(k) = endPt(2);
 end
 
-[miny, ind_min] = min(lines_starty);
-maxy = thirdLargest(lines_starty);
+[miny, ind_min] = min(linesStartY);
+maxy = thirdLargest(linesStartY);
 
 % plot(1, maxy, 'o', 'Color', 'Red', 'MarkerSize', 20)
 
-line1_pt1 = lines(ind_min).point1;
-line1_pt2 = lines(ind_min).point2;
-k = (line1_pt2(2) - line1_pt1(2)) / (line1_pt2(1) - line1_pt1(1));
+line1StartPt = lines(ind_min).point1;
+line1EndPt = lines(ind_min).point2;
+k = (line1EndPt(2) - line1StartPt(2)) / (line1EndPt(1) - line1StartPt(1));
 
 if plotLines
     % Upper line
     r = 0.81;
-    final_y = miny * r + maxy * (1-r);
+    y = miny * r + maxy * (1 - r);
     x=1:ncol;
-    plot(x, k * x + final_y, 'Color', 'Yellow')
+    plot(x, k * x + y, 'Color', 'Yellow')
     
     % Lower line
     r = 0.87;
-    final_y = miny * r + maxy * (1-r);
-    plot(x, k * x + final_y, 'Color', 'Yellow')
+    y = miny * r + maxy * (1 - r);
+    plot(x, k * x + y, 'Color', 'Yellow')
 end
 
 end
