@@ -1,7 +1,15 @@
-clc
-for i = 2
+clear; clc
+warning('off', 'all')
+for i = 1:10
     main(i)
 end
+
+%%
+clear; clc
+warning('off', 'all')
+
+imageNo = 2
+main(imageNo)
 
 
 %%

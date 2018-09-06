@@ -16,15 +16,15 @@ if plotLines
     imshow(I)
     hold on
     
-    %     % Draw hough lines on the original image
-    %     for k = 1:length(lines)
-    %         xy = [lines(k).point1; lines(k).point2];
-    %         plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color', 'green');
-    %
-    %         % Plot beginnings and ends of lines
-    %         plot(xy(1,1), xy(1,2), 'x', 'LineWidth', 4, 'Color', 'yellow');
-    %         plot(xy(2,1), xy(2,2), 'x', 'LineWidth', 4, 'Color', 'red');
-    %     end
+    % Draw hough lines on the original image
+    for k = 1:length(lines)
+        xy = [lines(k).point1; lines(k).point2];
+        plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color', 'green');
+        
+        % Plot beginnings and ends of lines
+        plot(xy(1,1), xy(1,2), 'x', 'LineWidth', 4, 'Color', 'yellow');
+        plot(xy(2,1), xy(2,2), 'x', 'LineWidth', 4, 'Color', 'red');
+    end
 end
 
 % Find horizontal location for "WMS Order No."
@@ -42,7 +42,12 @@ for k = 1:length(lines)
 end
 
 [miny, ind_min] = min(linesStartY);
-maxy = thirdLargest(linesStartY);
+[y2, maxy] = thirdLargest(linesStartY);
+
+% lineDistRatio = (maxy-miny) / (y2-miny);
+% if lineDistRatio <= 1 || lineDistRatio > 1.2
+%     'DID NOT FIND THE CORRECT 3 LINES!'
+% end
 
 % plot(1, maxy, 'o', 'Color', 'Red', 'MarkerSize', 20)
 
@@ -58,7 +63,7 @@ if plotLines
     plot(x, k * x + y, 'Color', 'Yellow')
     
     % Lower line
-    r = 0.87;
+    r = 0.88;
     y = miny * r + maxy * (1 - r);
     plot(x, k * x + y, 'Color', 'Yellow')
 end
