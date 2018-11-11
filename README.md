@@ -1,1 +1,1 @@
-# CV-Boshilun
+# CV-ReceiptRecognition
